@@ -27,13 +27,13 @@ class BouncesStream(SendGridStream):
         th.Property("error", th.StringType),
     ).to_dict()
 
-    def get_records(self, context: Optional[dict]) -> Iterable[dict]:
+    def get_records(self, context: dict | None) -> Iterable[dict]:
         """Return a generator of row-type dictionary objects.
 
         Each row emitted should be a dictionary of property names to their values.
         """
 
-        page_size = 500
+        page_size = self.page_size
         offset = 0
         if context is not None:
             start_time = self.get_starting_replication_key_value(context)
@@ -46,12 +46,11 @@ class BouncesStream(SendGridStream):
                 query_params={
                     "start_time": start_time,
                     "offset": offset,
-                    "limit": page_size
-                }
+                    "limit": page_size,
+                },
             )
 
-            for row in resp.to_dict:
-                yield row
+            yield from resp.to_dict
 
             if not self.paginator.has_more(resp):
                 break
@@ -75,12 +74,12 @@ class EmailActivitySteam(SendGridStream):
         th.Property("last_event_time", th.DateTimeType),
     ).to_dict()
 
-    def get_records(self, context: Optional[dict]) -> Iterable[dict]:
+    def get_records(self, context: dict | None) -> Iterable[dict]:
         """Return a generator of row-type dictionary objects.
 
         Each row emitted should be a dictionary of property names to their values.
         """
-        page_size = 1000
+        page_size = self.page_size
         from_email = self.config.get("from_email")
         if context is not None:
             start_time = context.get("last_datetime")
@@ -98,16 +97,12 @@ class EmailActivitySteam(SendGridStream):
 
             resp = self.conn.client.messages.get(
                 request_headers=self.headers,
-                query_params={
-                    "query": query,
-                    "limit": page_size
-                }
+                query_params={"query": query, "limit": page_size},
             )
 
-            for row in resp.to_dict['messages']:
-                yield row
+            yield from resp.to_dict["messages"]
 
             if not self.paginator.has_more(resp):
                 break
 
-            start_time = self.paginator.get_next(resp)
+            end_time = self.paginator.get_last(resp)

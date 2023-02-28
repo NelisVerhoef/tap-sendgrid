@@ -14,7 +14,6 @@ class TapSendGrid(Tap):
 
     name = "tap-sendgrid"
 
-    # TODO: Update this section with the actual config values you expect:
     config_jsonschema = th.PropertiesList(
         th.Property(
             "api_key",
@@ -24,14 +23,21 @@ class TapSendGrid(Tap):
             description="The token to authenticate against the API service",
         ),
         th.Property(
-            "start_datetime",
-            th.DateTimeType,
-            description="The earliest record date to sync",
-        ),
-        th.Property(
             "from_email",
             th.StringType,
             description="The email address that was used as sender",
+        ),
+        th.Property(
+            "start_datetime",
+            th.DateTimeType,
+            description="The earliest record date to sync",
+            default="1970-02-01T00:00:00Z",
+        ),
+        th.Property(
+            "batch_size",
+            th.IntegerType,
+            description="The email address that was used as sender",
+            default=500,
         ),
     ).to_dict()
 

@@ -15,10 +15,7 @@ SAMPLE_CONFIG = {
 
 
 # Run standard built-in tap tests from the SDK:
-TestTapSendGrid = get_tap_test_class(
-    tap_class=TapSendGrid,
-    config=SAMPLE_CONFIG
-)
+TestTapSendGrid = get_tap_test_class(tap_class=TapSendGrid, config=SAMPLE_CONFIG)
 
 
 # TODO: Create additional tests as appropriate for your tap.
