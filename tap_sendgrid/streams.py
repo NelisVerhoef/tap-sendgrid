@@ -82,7 +82,7 @@ class EmailActivitySteam(SendGridStream):
         from_email = self.config.get("from_email")
         start_time = self.get_starting_replication_key_value(context)
         if not start_time:
-            start_time = self.get_starting_replication_key_value(context)
+            start_time = self.config.get("start_datetime")
         end_time = self.end_time
 
         while True:
@@ -91,6 +91,7 @@ class EmailActivitySteam(SendGridStream):
                 f'AND last_event_time BETWEEN TIMESTAMP "{start_time}" '
                 f'AND TIMESTAMP "{end_time}"'
             )
+            self.logger.debug(f"Query: {query}")
 
             resp = self.conn.client.messages.get(
                 request_headers=self.headers,

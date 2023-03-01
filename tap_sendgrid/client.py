@@ -2,11 +2,8 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Callable
 from datetime import datetime
 
-import requests
 from singer_sdk.streams import RESTStream
 from singer_sdk.tap_base import Tap
 
@@ -14,9 +11,6 @@ from singer_sdk.pagination import BaseOffsetPaginator, BaseAPIPaginator
 
 from sendgrid import SendGridAPIClient
 from python_http_client.client import Response
-
-_Auth = Callable[[requests.PreparedRequest], requests.PreparedRequest]
-SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 
 class SendGridOffsetPaginator(BaseOffsetPaginator):
