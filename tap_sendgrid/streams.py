@@ -35,9 +35,8 @@ class BouncesStream(SendGridStream):
 
         page_size = self.page_size
         offset = 0
-        if context is not None:
-            start_time = self.get_starting_replication_key_value(context)
-        else:
+        start_time = self.get_starting_replication_key_value(context)
+        if not start_time:
             start_time = self.get_unix_start_time
 
         while True:
@@ -81,11 +80,9 @@ class EmailActivitySteam(SendGridStream):
         """
         page_size = self.page_size
         from_email = self.config.get("from_email")
-        if context is not None:
-            start_time = context.get("last_datetime")
+        start_time = self.get_starting_replication_key_value(context)
+        if not start_time:
             start_time = self.get_starting_replication_key_value(context)
-        else:
-            start_time = self.config.get("start_datetime")
         end_time = self.end_time
 
         while True:
