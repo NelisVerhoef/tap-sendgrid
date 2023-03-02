@@ -60,7 +60,7 @@ class BouncesStream(SendGridStream):
 class EmailActivitySteam(SendGridStream):
     name = "email_activity"
     path = "/v3/messages"
-    primary_keys = ["email"]
+    primary_keys = ["msg_id"]
     replication_key = "last_event_time"
     schema = th.PropertiesList(
         th.Property("from_email", th.StringType),
